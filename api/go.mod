@@ -1,4 +1,4 @@
-module api
+module github.com/stephen-pp/instajot
 
 go 1.21.5
 
