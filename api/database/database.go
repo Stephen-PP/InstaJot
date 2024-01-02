@@ -50,9 +50,10 @@ func createNotesDatabase(db *sql.DB) {
 	CREATE TABLE IF NOT EXISTS Notes (
 		NoteId TEXT,
 		HistoryId TEXT PRIMARY KEY,
-		UserId INTEGER FOREIGN KEY REFERENCES Users(UserId),
+		UserId INTEGER,
 		Content BLOB,
-		CreatedAt TIMESTAMP default (strftime('%s', 'now'))
+		CreatedAt TIMESTAMP default (strftime('%s', 'now')),
+		FOREIGN KEY (UserId) REFERENCES Users(UserId)
 	)`)
 
 	// Make sure we prepared the table successfully
