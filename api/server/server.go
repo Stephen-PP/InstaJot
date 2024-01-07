@@ -6,6 +6,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/stephen-pp/instajot/database"
+	"github.com/stephen-pp/instajot/validators"
 )
 
 func CreateServer() {
@@ -13,7 +14,16 @@ func CreateServer() {
 	db := database.CreateDatabase()
 
 	fmt.Println("Creating server...")
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		// Set custom error handler
+		ErrorHandler: func(c *fiber.Ctx, err error) error {
+			return c.Status(fiber.StatusBadRequest).JSON(validators.FailureResponse{
+				Success: false,
+				Data:    validators.EmptyStruct{},
+				Error:   err.Error(),
+			})
+		},
+	})
 
 	fmt.Println("Registering routes...")
 	RegisterRoutes(app)

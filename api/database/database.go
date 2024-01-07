@@ -26,7 +26,6 @@ func createUserDatabase(db *sql.DB) {
 	CREATE TABLE IF NOT EXISTS Users (
 		UserId TEXT PRIMARY KEY,
 		Username TEXT,
-		Email TEXT,
 		Password TEXT,
 		CreatedAt TIMESTAMP default (strftime('%s', 'now'))
 	)`)
@@ -50,7 +49,7 @@ func createNotesDatabase(db *sql.DB) {
 	CREATE TABLE IF NOT EXISTS Notes (
 		NoteId TEXT,
 		HistoryId TEXT PRIMARY KEY,
-		UserId INTEGER,
+		UserId TEXT,
 		Content BLOB,
 		CreatedAt TIMESTAMP default (strftime('%s', 'now')),
 		FOREIGN KEY (UserId) REFERENCES Users(UserId)
