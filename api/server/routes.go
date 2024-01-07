@@ -10,7 +10,7 @@ func RegisterRoutes(app *fiber.App) {
 	app.Post("/register", func(c *fiber.Ctx) error {
 		user := new(validators.UserRegistration)
 
-		// Parse the request body into the user struct
+		// Parse the request body into the user registration struct
 		if err := c.BodyParser(user); err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(validators.FailureResponse{
 				Success: false,
@@ -19,9 +19,9 @@ func RegisterRoutes(app *fiber.App) {
 			})
 		}
 
-		// Validate the user struct
+		// Validate the user registration struct
 		err := validators.Validate(user)
-		if err != nil {
+		if len(err) > 0 {
 			return c.Status(fiber.StatusBadRequest).JSON(validators.FailureResponse{
 				Success: false,
 				Data:    validators.EmptyStruct{},

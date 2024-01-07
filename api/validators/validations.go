@@ -78,7 +78,7 @@ func Validate(data interface{}) []ErrorResponse {
 
 func ParseValidationErrors(validationErrors []ErrorResponse) string {
 	// Make sure the items in the array are Errors
-	if !validationErrors[0].Error {
+	if len(validationErrors) == 0 || !validationErrors[0].Error {
 		return "Unknown errors"
 	}
 
