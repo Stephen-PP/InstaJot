@@ -46,7 +46,33 @@ func createTables() error {
 		FOREIGN KEY (user_id) REFERENCES users(id)
 	);`
 
-	for _, table := range []string{userTable, noteTable} {
+	noteTagTable := `
+	CREATE TABLE IF NOT EXISTS note_tags (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		note_id INTEGER,
+		name TEXT NOT NULL,
+		color TEXT NOT NULL,
+		user_id INTEGER,
+		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+		updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+		FOREIGN KEY (note_id) REFERENCES notes(id) ON DELETE CASCADE,
+		FOREIGN KEY (user_id) REFERENCES users(id)
+	);`
+
+	accessTokenTable := `
+	CREATE TABLE IF NOT EXISTS access_tokens (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		user_id INTEGER NOT NULL,
+		token TEXT NOT NULL UNIQUE,
+		expires_at DATETIME NOT NULL,
+		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+		updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+		FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+	);`
+
+	tables := []string{userTable, noteTable, noteTagTable, accessTokenTable}
+
+	for _, table := range tables {
 		_, err := db.Exec(table)
 		if err != nil {
 			return err

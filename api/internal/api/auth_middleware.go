@@ -2,41 +2,53 @@ package api
 
 import (
 	"context"
-	"database/sql"
 	"net/http"
 	"strings"
+	"time"
+
+	util "github.com/stephen-pp/instajot/internal/api/util"
+	"github.com/stephen-pp/instajot/internal/models"
 )
 
-type AuthMiddleware struct {
-	db *sql.DB
-}
-
-func NewAuthMiddleware(db *sql.DB) *AuthMiddleware {
-	return &AuthMiddleware{db: db}
-}
-
-func (m *AuthMiddleware) Authenticate(next http.HandlerFunc) http.HandlerFunc {
+func (api *APIServer) authenticateAccessToken(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		authHeader := r.Header.Get("Authorization")
 		if authHeader == "" {
-			http.Error(w, "Missing authorization header", http.StatusUnauthorized)
+			util.WriteFailureResponse(w, http.StatusUnauthorized, util.NewErrorResponse("Missing authorization header", "unauthorized", ""))
 			return
 		}
 
 		bearerToken := strings.Split(authHeader, " ")
 		if len(bearerToken) != 2 {
-			http.Error(w, "Invalid authorization header", http.StatusUnauthorized)
+			util.WriteFailureResponse(w, http.StatusUnauthorized, util.NewErrorResponse("Invalid authorization header", "unauthorized", ""))
 			return
 		}
 
 		token := bearerToken[1]
 
-		// TODO: Validate JWT token and extract user ID
+		var userID int64
+		var expiresAt time.Time
+		err := api.DB.QueryRow("SELECT user_id, expires_at FROM access_tokens WHERE token = ?", token).Scan(&userID, &expiresAt)
+		if err != nil {
+			util.WriteFailureResponse(w, http.StatusUnauthorized, util.NewErrorResponse("Invalid token", "unauthorized", ""))
+			return
+		}
 
-		// For now, we'll just pass a dummy user ID
-		userID := int64(1)
+		if time.Now().After(expiresAt) {
+			util.WriteFailureResponse(w, http.StatusUnauthorized, util.NewErrorResponse("Token expired", "unauthorized", ""))
+			return
+		}
 
-		ctx := context.WithValue(r.Context(), "user_id", userID)
+		// Pull the entire user from the database
+		var user models.User
+		err = api.DB.QueryRow("SELECT id, username, email FROM users WHERE id = ?", userID).Scan(&user.ID, &user.Username, &user.Email)
+		if err != nil {
+			util.WriteFailureResponse(w, http.StatusInternalServerError, util.NewErrorResponse("Failed to fetch user", "internal_error", ""))
+			return
+		}
+
+		// Set the user model in the context
+		ctx := context.WithValue(r.Context(), "user", user)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	}
 }
