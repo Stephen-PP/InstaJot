@@ -30,15 +30,6 @@ export default function DesktopSidebar() {
                     {notes.map((note) => (
                         <NoteCard key={note.id} note={note} />
                     ))}
-                    {notes.map((note) => (
-                        <NoteCard key={note.id} note={note} />
-                    ))}
-                    {notes.map((note) => (
-                        <NoteCard key={note.id} note={note} />
-                    ))}
-                    {notes.map((note) => (
-                        <NoteCard key={note.id} note={note} />
-                    ))}
                 </div>
             </div>
     
