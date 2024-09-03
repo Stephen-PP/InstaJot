@@ -9,12 +9,12 @@ export default function DesktopSidebar() {
     useEffect(() => {
         fetchNotes()
             .then((data) => setNotes(data));
-    })
+    }, []);
 
     return (
-        <div className="flex flex-col h-full hidden lg:block">
+        <div className="flex flex-col h-full hidden lg:block relative">
             {/* Sidebar content is in here */}
-            <div className="flex-grow overflow-y-auto">
+            <div className="flex-grow">
                 {/* First, just a section with "Notes" in the center, and "N" on the right */}
                 <div className="bg-orange-700 w-full h-12 flex flex-row justify-between items-center relative">
                     <div></div>
@@ -26,15 +26,15 @@ export default function DesktopSidebar() {
                 </div>
     
                 {/* Then, a list of notes */}
-                <div className="overflow-y-auto">
+                <div>
                     {notes.map((note) => (
                         <NoteCard key={note.id} note={note} />
                     ))}
                 </div>
             </div>
     
-            {/* At the very bottom of the screen, a small display showing current connection status and a GitHub link */}
-            <div className="bg-yellow-500 w-full h-6 flex flex-row justify-between items-center">
+            {/* At the very bottom of the sidebar, a small display showing current connection status and a GitHub link */}
+            <div className="bg-yellow-500 w-full h-6 flex flex-row justify-between items-center absolute bottom-0">
                 {/* Show a green badge showing connected on the left, and a GitHub link on the right */}
                 <div className="flex flex-row items-center pl-2">
                     <div className="bg-red-500 w-2 h-2 rounded-full"></div>
