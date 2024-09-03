@@ -2,7 +2,7 @@ import { Note } from "../../types/NoteTypes"
 
 export default function NoteCard({note}: {note: Note}) {
     return (
-        <div className="bg-slate-400 border-b-red-600 border-b-2 w-full flex flex-col justify-center items-start p-2">
+        <div className="bg-slate-400 border-b-red-600 border-b-2 w-dvw flex flex-col justify-center items-start p-2">
             {/* Title on left side, possible pin icon */}
             <div className="flex flex-row justify-between w-full">
                 <div className="text-white text-lg font-bold">{note.title}</div>

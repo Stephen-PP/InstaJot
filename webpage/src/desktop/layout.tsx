@@ -3,6 +3,7 @@ import { FaHome, FaUser, FaCog } from 'react-icons/fa'
 import DesktopSidebar from './components/Sidebar'
 
 const DesktopLayout = ({ children }: { children: React.ReactNode }) => {
+  console.log("desktop rendering")
   return (
     <div className="flex h-screen w-screen">
       <div className="bg-green-200 flex flex-col w-[50vw] max-w-[22rem]">

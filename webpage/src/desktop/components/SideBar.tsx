@@ -12,7 +12,7 @@ export default function DesktopSidebar() {
     })
 
     return (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full hidden lg:block">
             {/* Sidebar content is in here */}
             <div className="flex-grow overflow-y-auto">
                 {/* First, just a section with "Notes" in the center, and "N" on the right */}
