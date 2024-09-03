@@ -10,7 +10,7 @@ export default function NoteCard({note}: {note: Note}) {
             </div>
             <div className="text-white text-sm">{note.subtitle}</div>
             {/*Scrollable div for labels */}
-            <div className="flex flex-row overflow-x-auto no-scrollbar space-x-1 mt-2">
+            <div className="flex flex-row overflow-x-auto overflow-y-hidden no-scrollbar space-x-1 mt-2">
                 {note.labels.map((label) => (
                     <div key={label.id} className={`flex-shrink-0 bg-red-500 text-white text-xs rounded-md`}>
                         <span className="p-1">{label.name}</span>
